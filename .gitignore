@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+build/
+# Node
+node_modules/
+ts/dist/
+# Router runtime output (never commit real logs or payloads)
+logs/
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.env
+.env.*

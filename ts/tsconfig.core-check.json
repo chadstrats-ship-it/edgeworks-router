@@ -1,0 +1,9 @@
+{
+  "//": "Compiles src/core with NO node typings (types: []) and ES2022 lib only: any use of node globals/modules in core fails typecheck.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "noEmit": true
+  },
+  "include": ["src/core/**/*"]
+}

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edgeworks-router"
+version = "0.1.0"
+description = "Sonnet-first model router with validated escalation to Opus"
+requires-python = ">=3.11"
+dependencies = ["anthropic>=1.9.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+router = "edgeworks_router.cli:main"
+
+[tool.setuptools]
+packages = ["edgeworks_router"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

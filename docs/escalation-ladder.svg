@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" width="860" height="400" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+  <title>edgeworks-router escalation ladder</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker>
+  </defs>
+  <rect width="860" height="400" fill="#ffffff"/>
+  <!-- request -->
+  <rect x="20" y="170" width="120" height="60" rx="8" fill="#f1f5f9" stroke="#334155"/>
+  <text x="80" y="196" text-anchor="middle" font-weight="600">route(pipeline,</text>
+  <text x="80" y="214" text-anchor="middle" font-weight="600">params)</text>
+  <!-- step 1 -->
+  <rect x="190" y="40" width="190" height="70" rx="8" fill="#dcfce7" stroke="#166534"/>
+  <text x="285" y="66" text-anchor="middle" font-weight="600">Step 1: Sonnet</text>
+  <text x="285" y="86" text-anchor="middle">effort=high, retries on 429/5xx</text>
+  <!-- step 2 -->
+  <rect x="190" y="165" width="190" height="70" rx="8" fill="#fef9c3" stroke="#854d0e"/>
+  <text x="285" y="191" text-anchor="middle" font-weight="600">Step 2: Opus</text>
+  <text x="285" y="211" text-anchor="middle">effort=medium</text>
+  <!-- step 3 -->
+  <rect x="190" y="290" width="190" height="70" rx="8" fill="#fee2e2" stroke="#991b1b"/>
+  <text x="285" y="316" text-anchor="middle" font-weight="600">Step 3: Opus (critical only)</text>
+  <text x="285" y="336" text-anchor="middle">effort=xhigh</text>
+  <!-- validators -->
+  <rect x="450" y="40" width="190" height="70" rx="8" fill="#e0f2fe" stroke="#075985"/>
+  <text x="545" y="62" text-anchor="middle" font-weight="600">Validators</text>
+  <text x="545" y="80" text-anchor="middle">stop_reason, JSON, schema,</text>
+  <text x="545" y="96" text-anchor="middle">regex, command, grader</text>
+  <!-- done -->
+  <rect x="710" y="40" width="130" height="70" rx="8" fill="#dcfce7" stroke="#166534"/>
+  <text x="775" y="70" text-anchor="middle" font-weight="600">Return result</text>
+  <text x="775" y="90" text-anchor="middle">passed</text>
+  <rect x="710" y="290" width="130" height="70" rx="8" fill="#fee2e2" stroke="#991b1b"/>
+  <text x="775" y="316" text-anchor="middle" font-weight="600">failed_all</text>
+  <text x="775" y="336" text-anchor="middle" font-size="12">best attempt kept</text>
+  <!-- log -->
+  <rect x="450" y="165" width="190" height="70" rx="8" fill="#f1f5f9" stroke="#334155"/>
+  <text x="545" y="191" text-anchor="middle" font-weight="600">JSONL cost log</text>
+  <text x="545" y="211" text-anchor="middle">one line per attempt</text>
+  <!-- arrows -->
+  <path d="M140,200 L170,200 L170,75 L190,75" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a)"/>
+  <path d="M380,75 L450,75" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a)"/>
+  <path d="M640,75 L710,75" fill="none" stroke="#166534" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="675" y="66" text-anchor="middle" fill="#166534">pass</text>
+  <path d="M545,110 L545,140 L285,140 L285,165" fill="none" stroke="#991b1b" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="415" y="134" text-anchor="middle" fill="#991b1b">fail: escalate</text>
+  <path d="M380,200 L450,200" fill="none" stroke="#334155" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <path d="M285,235 L285,290" fill="none" stroke="#991b1b" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="330" y="268" fill="#991b1b">fail</text>
+  <path d="M380,325 L710,325" fill="none" stroke="#991b1b" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="545" y="316" text-anchor="middle" fill="#991b1b">fail on last step</text>
+  <text x="430" y="392" text-anchor="middle" fill="#475569">Infrastructure errors (429, 529, 5xx, timeouts) retry the SAME model with jittered backoff; they never escalate.</text>
+</svg>

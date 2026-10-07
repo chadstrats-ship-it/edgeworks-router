@@ -1,0 +1,56 @@
+{
+  "name": "@edgeworks/router",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Model router: Sonnet-first escalation ladder with validators, cost logging and batch mode. Core is browser/React-Native safe (zero runtime deps, injectable fetch + sink); ./node adds routing.json loading, file sinks and the command validator.",
+  "type": "module",
+  "main": "./dist/cjs/core/index.js",
+  "module": "./dist/esm/core/index.js",
+  "types": "./dist/cjs/core/index.d.ts",
+  "react-native": "./dist/esm/core/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/core/index.d.ts",
+        "default": "./dist/esm/core/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/core/index.d.ts",
+        "default": "./dist/cjs/core/index.js"
+      }
+    },
+    "./node": {
+      "import": {
+        "types": "./dist/esm/node/index.d.ts",
+        "default": "./dist/esm/node/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/node/index.d.ts",
+        "default": "./dist/cjs/node/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "node": ["./dist/cjs/node/index.d.ts"]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.core-check.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

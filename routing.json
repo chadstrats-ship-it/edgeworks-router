@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "models": {
+    "sonnet": "claude-sonnet-5-5",
+    "opus": "claude-opus-5-5",
+    "grader": "claude-haiku-4-5-20251001"
+  },
+  "pricing": {
+    "sonnet": {
+      "input": 2.0,
+      "output": 10.0,
+      "cache_write_5m": 2.5,
+      "cache_read": 0.2
+    },
+    "opus": {
+      "input": 4.0,
+      "output": 20.0,
+      "cache_write_5m": 5.0,
+      "cache_read": 0.2
+    },
+    "haiku": {
+      "input": 1.0,
+      "output": 5.0,
+      "cache_write_5m": 1.25,
+      "cache_read": 0.1
+    }
+  },
+  "model_pricing": {
+    "claude-sonnet-5-5": "sonnet",
+    "claude-sonnet-5": "sonnet",
+    "claude-opus-5-5": "opus",
+    "claude-haiku-4-5-20251001": "haiku",
+    "claude-haiku-4-5": "haiku"
+  },
+  "batch_discount": 0.5,
+  "defaults": {
+    "ladder": [
+      {
+        "model": "sonnet",
+        "effort": "high"
+      },
+      {
+        "model": "opus",
+        "effort": "medium"
+      },
+      {
+        "model": "opus",
+        "effort": "xhigh",
+        "critical_only": true
+      }
+    ],
+    "max_attempts": 3,
+    "grader_threshold": 7,
+    "retry": {
+      "max_retries": 4,
+      "base_ms": 1000,
+      "max_ms": 30000
+    },
+    "batch_poll_seconds": 30
+  },
+  "report": {
+    "pin_escalation_rate": 0.4,
+    "pin_window": 50,
+    "medium_pass_rate": 0.95,
+    "medium_window": 100
+  },
+  "pipelines": {
+    "smoke-test": {
+      "description": "Smoke test: model must return a JSON object containing an 'ok' field.",
+      "ladder": null,
+      "validators": [
+        {
+          "type": "json"
+        },
+        {
+          "type": "required_fields",
+          "fields": [
+            "ok"
+          ]
+        }
+      ],
+      "grader": {
+        "enabled": false,
+        "threshold": 7,
+        "rubric": ""
+      },
+      "max_attempts": 3,
+      "batchable": true,
+      "critical": false,
+      "pinned_model": null
+    },
+    "smoke-force-escalation": {
+      "description": "Smoke test: built-in custom validator fail_on_step_1 forces escalation to step 2.",
+      "ladder": null,
+      "validators": [
+        {
+          "type": "custom",
+          "name": "fail_on_step_1"
+        }
+      ],
+      "grader": {
+        "enabled": false,
+        "threshold": 7,
+        "rubric": ""
+      },
+      "max_attempts": 3,
+      "batchable": true,
+      "critical": false,
+      "pinned_model": null
+    },
+    "extract-ticket-fields": {
+      "ladder": null,
+      "validators": [
+        {
+          "type": "json",
+          "extract": "object"
+        },
+        {
+          "type": "json_schema",
+          "schema": {
+            "type": "object",
+            "required": [
+              "category",
+              "priority",
+              "summary"
+            ],
+            "properties": {
+              "category": {
+                "type": "string",
+                "enum": [
+                  "billing",
+                  "bug",
+                  "feature_request",
+                  "other"
+                ]
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 200
+              }
+            }
+          }
+        }
+      ],
+      "grader": {
+        "enabled": false,
+        "threshold": 7,
+        "rubric": ""
+      },
+      "max_attempts": 3,
+      "batchable": true,
+      "critical": false,
+      "pinned_model": null,
+      "description": "Example: extract structured fields from a support ticket as a strict JSON object. Deterministic validators only; escalates to Opus when the JSON or schema is wrong."
+    },
+    "classify-sentiment-critical": {
+      "ladder": null,
+      "validators": [
+        {
+          "type": "json",
+          "extract": "object"
+        },
+        {
+          "type": "json_schema",
+          "schema": {
+            "type": "object",
+            "required": [
+              "label"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "enum": [
+                  "positive",
+                  "neutral",
+                  "negative"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "grader": {
+        "enabled": false,
+        "threshold": 7,
+        "rubric": ""
+      },
+      "max_attempts": 3,
+      "batchable": false,
+      "critical": true,
+      "pinned_model": null,
+      "description": "Example: single-label sentiment classification where a wrong answer is costly, so the third ladder step (Opus, xhigh) is enabled."
+    },
+    "write-release-notes-graded": {
+      "ladder": null,
+      "validators": [],
+      "grader": {
+        "enabled": true,
+        "threshold": 7,
+        "rubric": "Score the CANDIDATE RESPONSE as release notes: it must be plain prose or a short bullet list, summarize only the changes given in the ORIGINAL REQUEST, invent no features, and contain no preamble such as 'Here are'. Score below 7 for invented content, preamble, or markdown fences."
+      },
+      "max_attempts": 3,
+      "batchable": true,
+      "critical": false,
+      "pinned_model": null,
+      "description": "Example: free-text output with no deterministic oracle (no validators), so a Haiku grader scores it against a rubric and the ladder escalates when the score is below the threshold."
+    }
+  }
+}
